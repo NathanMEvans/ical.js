@@ -258,34 +258,10 @@
         
         var par = stack.pop()
 
-        if (curr.uid)
-        {
-        	// If this is the first time we run into this UID, just save it.
-        	if (par[curr.uid] === undefined)
-            {
-            	par[curr.uid] = curr;
-            }
-            else
-            {
-                // If we have multiple ical entries with the same UID, it's either going to be a
-                // modification to a recurrence (RECURRENCE-ID), and/or a significant modification
-                // to the entry (SEQUENCE).
-
-                // TODO: Look into proper sequence logic.
-
-                if (curr.recurrenceid === undefined)
-                {
-                    // If we have the same UID as an existing record, and it *isn't* a specific recurrence ID,
-                    // not quite sure what the correct behaviour should be.  For now, just take the new information
-                    // and merge it with the old record by overwriting only the fields that appear in the new record.
-                    var key;
-                    for (key in curr) {
-                    	par[curr.uid][key] = curr[key];
-                    }
-
-                }
-            }
-
+        // assign random uuid as curr.uid not unique
+        var UUID = require('node-uuid');
+        par[UUID.v4()] = curr;
+        
         	// If we have recurrence-id entries, list them as an array of recurrences keyed off of recurrence-id.
         	// To use - as you're running through the dates of an rrule, you can try looking it up in the recurrences
         	// array.  If it exists, then use the data from the calendar object in the recurrence instead of the parent
@@ -332,10 +308,7 @@
         		delete par[curr.uid].recurrenceid;
             }
 
-        }
-        else
-          par[Math.random()*100000] = curr  // Randomly assign ID : TODO - use true GUID
-
+      
         return par
       }
 
