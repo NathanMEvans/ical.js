@@ -260,7 +260,8 @@
 
         // assign random uuid as curr.uid not unique
         var UUID = require('node-uuid');
-        par[UUID.v4()] = curr;
+        const uuid = UUID.v4()
+        par[uuid] = curr;
         
         	// If we have recurrence-id entries, list them as an array of recurrences keyed off of recurrence-id.
         	// To use - as you're running through the dates of an rrule, you can try looking it up in the recurrences
@@ -293,19 +294,19 @@
 
 
 				// If we don't have an array to store recurrences in yet, create it.
-        		if (par[curr.uid].recurrences === undefined) {
-        			par[curr.uid].recurrences = new Array();
+        		if (par[uuid].recurrences === undefined) {
+        			par[uuid].recurrences = new Array();
             	}
 
 				// Save off our cloned recurrence object into the array, keyed by date.
-        		par[curr.uid].recurrences[curr.recurrenceid.toISOString()] = recurrenceObj;
+        		par[uuid].recurrences[curr.recurrenceid.toISOString()] = recurrenceObj;
             }
 
         	// One more specific fix - in the case that an RRULE entry shows up after a RECURRENCE-ID entry,
         	// let's make sure to clear the recurrenceid off the parent field.
-        	if ((par[curr.uid].rrule != undefined) && (par[curr.uid].recurrenceid != undefined))
+        	if ((par[uuid].rrule != undefined) && (par[uuid].recurrenceid != undefined))
             {
-        		delete par[curr.uid].recurrenceid;
+        		delete par[uuid].recurrenceid;
             }
 
       
